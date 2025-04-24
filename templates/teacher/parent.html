@@ -1,0 +1,515 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Information Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <!-- Add AOS for animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <style>
+        :root {
+            --primary: #4A90E2;
+            --secondary: #6C5CE7;
+            --accent: #FF9F43;
+            --background: #F8F9FA;
+            --text-primary: #2D3436;
+            --text-secondary: #636E72;
+            --card-bg: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        .nav-top {
+            background: #fff;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .nav-list {
+            display: flex;
+            list-style: none;
+            gap: 1rem;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-item.dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: var(--card-bg);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 0.5rem;
+            min-width: 200px;
+            z-index: 10;
+        }
+
+        .dropdown-menu .nav-link {
+            display: block;
+            padding: 0.5rem 1rem;
+        }
+
+        .teacher-badge {
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            animation: fadeInUp 1s ease-out 0.2s backwards;
+        }
+
+        .dashboard-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .dashboard-card i {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-content .card-title {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-content .card-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Feature Cards */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            animation: fadeInUp 1s ease-out 0.4s backwards;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.15);
+        }
+
+        .feature-card i {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .feature-card a:hover {
+            color: var(--primary);
+        }
+
+        /* Parent Container for Side-by-Side Sections */
+        .sections-container {
+            display: flex;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+            justify-content: center;
+            padding: 0 1rem;
+        }
+
+        /* Form Container */
+        .container {
+            background: var(--card-bg);
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            flex: 1;
+            max-width: 600px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Form Elements */
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+            outline: none;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Submit Button */
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        button:hover {
+            background: #357ABD;
+            transform: translateY(-2px);
+        }
+
+        /* Card (Table Container) */
+        .card {
+            background: var(--card-bg);
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            flex: 1;
+            max-width: 600px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th,
+        td {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        td {
+            color: var(--text-primary);
+        }
+
+        tr:hover {
+            background: #F1F5F9;
+        }
+
+        /* Back Button */
+        .back-btn {
+            display: block;
+            text-align: center;
+            margin: 2rem auto;
+            padding: 0.75rem;
+            background: var(--secondary);
+            color: white;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            max-width: 200px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #5A4FCF;
+            transform: translateY(-2px);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sections-container {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .container,
+            .card {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container,
+            .card {
+                padding: 1.5rem;
+            }
+
+            h1,
+            .card-title {
+                font-size: 1.5rem;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container,
+            .card {
+                padding: 1rem;
+            }
+
+            input,
+            textarea,
+            button,
+            .back-btn {
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
+
+            th,
+            td {
+                padding: 0.5rem;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="nav-top">
+        <div class="logo">
+            <i class="uil uil-graduation-cap"></i>
+            <span>EduConnect</span>
+        </div>
+        <ul class="nav-list">
+            <li class="nav-item">
+                <a href="teacher" class="nav-link">Dashboard</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link">Students</a>
+                <div class="dropdown-menu">
+                    <a href="/manage_student" class="nav-link">Add Student</a>
+                    <a href="/viewstudent" class="nav-link">View Students</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link">Resources</a>
+                <div class="dropdown-menu">
+                    <a href="/assign_ment" class="nav-link">Upload Assignment</a>
+                    <a href="/lecture_note" class="nav-link">Upload Notes</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a href="/view_complaint" class="nav-link">Complaints</a>
+            </li>
+            <li class="nav-item">
+                <a href="/" class="nav-link">Logout</a>
+            </li>
+            <li class="nav-item">
+                <span class="teacher-badge">Teacher</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="sections-container">
+        <div class="container" data-aos="fade-up">
+            <h1>Parent Information Form</h1>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="name">Parent Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter parent's name" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter phone number" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="Enter email address" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <textarea id="address" name="address" placeholder="Enter full address" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="uname">Username</label>
+                    <input type="text" id="uname" name="uname" placeholder="Create username for parent" required>
+                </div>
+                <div class="form-group">
+                    <label for="pswd">Password</label>
+                    <input type="password" id="pswd" name="pswd" placeholder="Create password for parent" required>
+                </div>
+                <button type="submit">Submit Parent Information</button>
+            </form>
+        </div>
+
+        <div class="card" data-aos="fade-up" data-aos-delay="200">
+            <h2 class="card-title">Parent Details</h2>
+            {% if manage_parent %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Parent ID</th>
+                        <th>Parent Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ manage_parent.parent_id }}</td>
+                        <td>{{ manage_parent.name }}</td>
+                        <td>{{ manage_parent.phone }}</td>
+                        <td>{{ manage_parent.email }}</td>
+                        <td>{{ manage_parent.address }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            {% else %}
+            <p style="text-align: center; color: var(--text-secondary); margin-top: 2rem;">No parent details available for this student.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <a href="/viewstudent" class="back-btn" data-aos="fade-up" data-aos-delay="300">Back to Students</a>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize AOS
+            AOS.init({ duration: 800, once: true });
+        });
+    </script>
+</body>
+</html>

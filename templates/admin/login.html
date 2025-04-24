@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - EduConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+
+        .login-container {
+            display: flex;
+            max-width: 1000px;
+            width: 100%;
+            background-color: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .left-section {
+            position: relative;
+            width: 50%;
+            clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
+            overflow: hidden;
+        }
+
+        .left-section img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .welcome-text {
+            position: absolute;
+            bottom: 15%;
+            left: 10%;
+            color: #fff;
+            z-index: 2;
+        }
+
+        .welcome-text h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-text p {
+            font-size: 0.9rem;
+            max-width: 300px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .explore-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .explore-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(30, 30, 60, 0.8), rgba(30, 30, 60, 0.4));
+        }
+
+        .right-section {
+            width: 50%;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-header {
+            margin-bottom: 40px;
+        }
+
+        .login-header h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #777;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            color: #3498db;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #333;
+            background-color: #f9fafb;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            accent-color: #3498db;
+        }
+
+        .remember-me label {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .forgot-password {
+            font-size: 0.85rem;
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .forgot-password:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .login-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .sign-up {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .sign-up a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 5px;
+        }
+
+        .sign-up a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .login-container {
+                flex-direction: column;
+                max-width: 500px;
+            }
+
+            .left-section, .right-section {
+                width: 100%;
+            }
+
+            .left-section {
+                height: 250px;
+                clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%);
+            }
+
+            .welcome-text {
+                bottom: 25%;
+                left: 50%;
+                transform: translateX(-50%);
+                text-align: center;
+            }
+
+            .welcome-text p {
+                max-width: 80%;
+                margin: 0 auto;
+            }
+
+            .right-section {
+                padding: 40px 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                border-radius: 15px;
+            }
+
+            .left-section {
+                height: 200px;
+            }
+
+            .welcome-text h1 {
+                font-size: 1.8rem;
+            }
+
+            .welcome-text p {
+                font-size: 0.8rem;
+            }
+
+            .right-section {
+                padding: 30px 20px;
+            }
+
+            .login-header h2 {
+                font-size: 1.6rem;
+            }
+
+            .remember-forgot {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Left Section with Background Image -->
+        <div class="left-section">
+            <div class="overlay"></div>
+            <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Education Background">
+            <div class="welcome-text">
+                <h1>EduConnect</h1>
+                <p>Empowering education through seamless connectivity between students, teachers, and parents since 2023.</p>
+                <!-- <a href="#" class="explore-btn">Discover More</a> -->
+            </div>
+        </div>
+
+        <!-- Right Section with Login Form -->
+        <div class="right-section">
+            <div class="login-header">
+                <h2>Login</h2>
+                <p>Access your EduConnect dashboard to manage courses, assignments, attendance, and communications all in one place.</p>
+            </div>
+
+            <form method="POST">
+                <div class="input-group">
+                    <label for="uname">Username</label>
+                    <input type="text" id="uname" name="uname" placeholder="Enter your username" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="pswd">Password</label>
+                    <input type="password" id="pswd" name="pswd" placeholder="Enter your password" required>
+                </div>
+
+                <div class="remember-forgot">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember">Remember me</label>
+                    </div>
+                    <!-- <a href="#" class="forgot-password">Forgot Password?</a> -->
+                </div>
+
+                <button type="submit" class="login-btn">Login</button>
+                
+                <div class="sign-up">
+                    New to EduConnect? - Contact admin</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

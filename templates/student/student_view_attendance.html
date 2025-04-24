@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Records - EduConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #4c3bab;
+            --accent: #ff6b6b;
+            --dark-blue: #1e2a78;
+            --light-blue: #42b7ff;
+            --orange: #ff9f67;
+            --green: #4be0bc;
+            --yellow: #ffce54;
+            --bg-light: #ffffff;
+            --text-dark: #2c3e50;
+            --text-gray: #7f8c8d;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 280px;
+            background: rgba(76, 59, 171, 0.95);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar .logo {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar .logo svg {
+            margin-right: 0.5rem;
+            stroke: var(--light-blue);
+        }
+
+        .sidebar .logo h2 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--light-blue), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 0;
+        }
+
+        .nav-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .nav-item {
+            margin-bottom: 15px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.4s ease;
+        }
+
+        .nav-link i {
+            margin-right: 12px;
+            font-size: 20px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            transform: translateX(5px);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .sub-list {
+            list-style: none;
+            padding-left: 2rem;
+            margin-top: 0.5rem;
+        }
+
+        .sub-list .nav-link {
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 40px;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Admin Badge */
+        .admin-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--primary);
+            color: white;
+            padding: 8px 15px;
+            font-weight: 600;
+            transform: rotate(45deg) translate(25%, -15%);
+            transform-origin: top right;
+            font-size: 14px;
+            border-bottom-left-radius: 5px;
+            z-index: 100;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--secondary), var(--dark-blue));
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            color: white;
+            box-shadow: var(--box-shadow);
+        }
+
+        .page-header h2 {
+            font-size: 28px;
+            margin-bottom: 5px;
+            color: white;
+            text-align: left;
+            background: none;
+            -webkit-background-clip: initial;
+            background-clip: initial;
+        }
+
+        .page-header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        /* Data Card */
+        .data-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--box-shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* Filter Form */
+        .filter-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary);
+        }
+
+        .filter-form .form-group {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-form label {
+            font-size: 14px;
+            color: var(--text-gray);
+            margin-bottom: 5px;
+        }
+
+        .filter-form input, 
+        .filter-form select {
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .filter-form button {
+            align-self: flex-end;
+            padding: 10px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-form button:hover {
+            background: var(--dark-blue);
+            transform: translateY(-2px);
+        }
+
+        /* Table Styles */
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 10px;
+            box-shadow: var(--box-shadow);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        th {
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 15px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 15px;
+            color: var(--text-dark);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #f8f9fa;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-present {
+            background-color: rgba(39, 174, 96, 0.15);
+            color: #27ae60;
+        }
+
+        .status-absent {
+            background-color: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+        }
+
+        .status-unknown {
+            background-color: rgba(243, 156, 18, 0.15);
+            color: #f39c12;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-gray);
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #e2e8f0;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        /* Back Button */
+        .back-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--orange);
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            border-radius: 30px;
+            margin-top: 2rem;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #ff8c4d;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 159, 103, 0.4);
+        }
+
+        /* Menu Toggle */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            background: var(--secondary);
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .menu-toggle:hover {
+            background: var(--primary);
+            transform: rotate(90deg);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-content {
+                margin-left: 0;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+
+            .data-card {
+                padding: 20px;
+            }
+
+            .filter-form {
+                flex-direction: column;
+            }
+
+            .back-btn {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .page-header {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Panel Badge -->
+    <div class="admin-badge">STUDENT PANEL</div>
+
+    <!-- Menu Toggle Button -->
+    <button class="menu-toggle">
+        <i class="uil uil-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg>
+            <h2>EduConnect</h2>    </div> <nav>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="/student" class="nav-link active"><i class="uil uil-layout"></i><span>Dashboard</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/teachers" class="nav-link"><i class="uil uil-users-alt"></i><span>View Teachers</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/lecture" class="nav-link"><i class="uil uil-book-open"></i><span>View Lecture Note</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/assignment" class="nav-link"><i class="uil uil-clipboard"></i><span>View Assignment</span></a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a href="#" class="nav-link"><i class="uil uil-pen"></i><span>Attend Assessment</span></a>
+                        <ul class="sub-list">
+                            <li><a href="#" class="nav-link"><i class="uil uil-check-circle"></i><span>View Score</span></a></li>
+                        </ul>
+                    </li> -->
+                    <li class="nav-item">
+                        <a href="/chat_bot" class="nav-link"><i class="uil uil-message"></i><span>Chatbot</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/notification" class="nav-link"><i class="uil uil-bell"></i><span>View Notification</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/student_view_attendance" class="nav-link"><i class="uil uil-calendar-alt"></i><span>View Attendance</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/pass_request" class="nav-link"><i class="uil uil-ticket"></i><span>Request Pass</span></a>
+                        <ul class="sub-list">
+                            <li><a href="/passreq" class="nav-link"><i class="uil uil-eye"></i><span>View Status</span></a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/complaint" class="nav-link"><i class="uil uil-comment-alt-lines"></i><span>Give Complaints</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/login" class="nav-link"><i class="uil uil-sign-out-alt"></i><span>Logout</span></a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="page-header">
+            <h2>Attendance Records</h2>
+            <p>View and filter your attendance history</p>
+        </div>
+
+        <div class="data-card">
+            <!-- Filter Form -->
+            <form method="GET" action="" class="filter-form">
+                <div class="form-group">
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" name="date" value="{{ request.GET.date }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="teacher">Teacher:</label>
+                    <select id="teacher" name="teacher">
+                        <option value="">All Teachers</option>
+                        {% for teacher in teachers %}
+                            <option value="{{ teacher.teacher_id }}" {% if request.GET.teacher == teacher.teacher_id|stringformat:"s" %}selected{% endif %}>{{ teacher.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+        
+                <div class="form-group">
+                    <label for="subject">Subject:</label>
+                    <select id="subject" name="subject">
+                        <option value="">All Subjects</option>
+                        {% for subject in subjects %}
+                            <option value="{{ subject.subject_id }}" {% if request.GET.subject == subject.subject_id|stringformat:"s" %}selected{% endif %}>{{ subject.subject }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+        
+                <button type="submit">Apply Filter</button>
+            </form>
+
+            <!-- Attendance Table -->
+            <div class="table-responsive">
+                {% if attendance %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Course</th>
+                            <th>Subject</th>
+                            <th>Teacher</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in attendance %}
+                        <tr>
+                            <td>{{ record.date }}</td>
+                            <td>{{ record.course.course }}</td>
+                            <td>{{ record.teacher.subject.subject }}</td>
+                            <td>{{ record.teacher.name }}</td>
+                            <td>
+                                {% if record.attendance == 'present' %}
+                                    <span class="status-badge status-present">✓ Present</span>
+                                {% elif record.attendance == 'absent' %}
+                                    <span class="status-badge status-absent">✗ Absent</span>
+                                {% else %}
+                                    <span class="status-badge status-unknown">? Unknown</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-state">
+                    <i class="uil uil-calendar-slash"></i>
+                    <p>No attendance records found for the selected filters.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Back Button -->
+        <a href="/student" class="back-btn">
+            <i class="uil uil-arrow-left"></i> Back to Dashboard
+        </a>
+    </main>
+
+    <script>
+        // Menu Toggle Functionality
+        const menuToggle = document.querySelector('.menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+        
+        // Close sidebar when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!sidebar.contains(e.target) && e.target !== menuToggle) {
+                sidebar.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

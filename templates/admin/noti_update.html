@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Update</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.min.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/jquery.fancyBox.min.css">
+    <link rel="stylesheet" href="fonts/icomoon/style.css">
+    <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
+    <link rel="stylesheet" href="css/aos.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        :root {
+            --primary-color: #0062ff;
+            --secondary-color: #00c6ff;
+            --accent-color: #7d40ff;
+            --dark-blue: #0a1e3c;
+            --text-color: #fff;
+            --light-text: #bfdbfe;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --grid-bg: rgba(255, 255, 255, 0.03);
+            --danger-color: #e74c3c;
+            --success-color: #2ecc71;
+            --highlight-color: #ffcc00;
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--dark-blue), #1e3a8a);
+            color: var(--text-color);
+            position: relative;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Background Grid and Elements */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--grid-bg) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-bg) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+            opacity: 0.5;
+            animation: pulse 10s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            100% { opacity: 0.7; }
+        }
+
+        .bg-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .bg-element {
+            position: absolute;
+            background: var(--card-bg);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .bg-element:nth-child(1) { width: 300px; height: 300px; top: -150px; left: -150px; animation-delay: 0s; }
+        .bg-element:nth-child(2) { width: 500px; height: 500px; top: 50%; right: -250px; animation-delay: 2s; }
+        .bg-element:nth-child(3) { width: 200px; height: 200px; bottom: -100px; left: 30%; animation-delay: 4s; }
+        .bg-element:nth-child(4) { width: 150px; height: 150px; top: 20%; left: 10%; animation-delay: 6s; }
+        .bg-element:nth-child(5) { width: 250px; height: 250px; bottom: 10%; right: 20%; animation-delay: 8s; }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        /* Sidebar */
+        .admin-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 280px;
+            background: rgba(255, 255, 255, 0.2);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            z-index: 10;
+        }
+
+        .admin-sidebar .logo {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .admin-sidebar .logo svg { margin-right: 0.5rem; stroke: var(--primary-color); }
+        .admin-sidebar .logo h2 { font-size: 28px; font-weight: 700; background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); -webkit-background-clip: text; background-clip: text; color: transparent; margin: 0; }
+
+        .nav-list { list-style: none; padding: 0; }
+        .nav-item { margin-bottom: 15px; }
+        .nav-link { display: flex; align-items: center; padding: 12px 15px; color: var(--light-text); text-decoration: none; border-radius: var(--border-radius); transition: all 0.4s ease; }
+        .nav-link i { margin-right: 12px; font-size: 20px; }
+        .nav-link:hover, .nav-link.active { background: var(--primary-color); color: white; transform: translateX(5px); box-shadow: 0 0 10px rgba(0, 98, 255, 0.3); }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 60px 40px 40px;
+            min-height: 100vh;
+            position: relative;
+            z-index: 5;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        /* Grid-based Top Bar */
+        .top-bar {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 20px;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            animation: slideInDown 1s ease-out;
+        }
+
+        .welcome { display: grid; grid-template-rows: auto auto; gap: 8px; }
+        .welcome h1 { font-size: 36px; font-weight: 700; color: var(--light-text); margin: 0; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); }
+        .welcome p { color: var(--light-text); font-size: 16px; margin: 0; opacity: 0.9; }
+
+        /* EduConnectZ Status Widget (Replacing Search Bar) */
+        .educonnect-status {
+            max-width: 300px;
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            color: var(--light-text);
+            transition: all 0.4s ease;
+        }
+
+        .educonnect-status:hover {
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 6px 15px rgba(0, 98, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .status-item i { font-size: 18px; color: var(--secondary-color); }
+        .status-item span { font-size: 14px; }
+
+        /* Notification Update Section */
+        .update-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 120px); /* Adjust for top bar and padding */
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            transition: all 0.5s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: bounceIn 1.2s ease-out;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: slideInDown 1s ease-out;
+        }
+
+        .form-header h2 {
+            color: var(--light-text);
+            font-size: 28px;
+            font-weight: 600;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-box {
+            margin-bottom: 25px;
+            position: relative;
+            animation: fadeInUp 1s ease-out 0.5s backwards;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            color: var(--secondary-color);
+            font-size: 20px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px 20px 15px 45px;
+            font-size: 16px;
+            border: none;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light-text);
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-bottom: 2px solid var(--primary-color);
+            box-shadow: 0 0 10px rgba(0, 98, 255, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            color: var(--card-bg);
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 6px 15px rgba(0, 98, 255, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            top: 0;
+            left: 0;
+            transition: width 0.3s ease;
+            z-index: 1;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 98, 255, 0.6);
+            color: #fff;
+        }
+
+        .btn:hover::after {
+            width: 100%;
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .quote {
+            font-style: italic;
+            font-size: 1.1rem;
+            color: var(--light-text);
+            margin-top: 20px;
+            padding: 1.5rem;
+            border-left: 5px solid var(--secondary-color);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            animation: slideInRight 1.5s ease-out 0.5s backwards;
+            text-align: center;
+        }
+
+        /* Animations */
+        @keyframes slideInLeft { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes bounceIn { 0% { transform: scale(0); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+        /* Menu Toggle */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            color: var(--light-text);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .menu-toggle:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 991px) {
+            .admin-sidebar { transform: translateX(-100%); z-index: 1000; }
+            .admin-sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 20px; }
+            .menu-toggle { display: block; }
+            .top-bar { grid-template-columns: 1fr; gap: 15px; }
+            .educonnect-status { max-width: 100%; }
+            .update-section { min-height: calc(100vh - 60px); padding: 10px; }
+            .card { padding: 30px; max-width: 100%; }
+        }
+
+        @media (max-width: 600px) {
+            .form-header h2 { font-size: 24px; }
+            .input-field { font-size: 14px; padding: 10px 20px 10px 40px; }
+            .btn { font-size: 16px; padding: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Elements -->
+    <div class="bg-grid"></div>
+    <div class="bg-elements">
+        <div class="bg-element"></div>
+        <div class="bg-element"></div>
+        <div class="bg-element"></div>
+        <div class="bg-element"></div>
+        <div class="bg-element"></div>
+    </div>
+
+    <!-- Menu Toggle Button -->
+    <button class="menu-toggle">
+        <i class="uil uil-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+        <div class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg>
+            <h2>EduConnect</h2>
+        </div>
+        <nav> 
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active"><i class="uil uil-layout"></i><span>Dashboard</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="/manage_subject" class="nav-link"><i class="uil uil-book-open"></i><span>Manage Subjects</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="/manage_course" class="nav-link"><i class="uil uil-graduation-cap"></i><span>Manage Courses</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="/manage_teacher" class="nav-link"><i class="uil uil-users-alt"></i><span>Manage Teachers</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="/send_notification" class="nav-link"><i class="uil uil-bell"></i><span>Send Notifications</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="/view_courssub" class="nav-link"><i class="uil uil-book-open"></i><span>Courses & Subjects</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="/view_students" class="nav-link"><i class="uil uil-user"></i><span>View Students</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="/view_teachers" class="nav-link"><i class="uil uil-user-check"></i><span>View Teachers</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="/view_parents" class="nav-link"><i class="uil uil-user-md"></i><span>View Parents</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="/login" class="nav-link"><i class="uil uil-sign-out-alt"></i><span>Logout</span></a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="top-bar">
+            <div class="welcome">
+                <h1>Welcome, Admin!</h1>
+                <p>Update notification status efficiently today</p>
+            </div>
+            <div class="educonnect-status">
+                <div class="status-item"><i class="uil uil-bell"></i><span>Pending Updates: 3</span></div>
+                <div class="status-item"><i class="uil uil-users"></i><span>Updated Users: 150</span></div>
+            </div>
+        </div>
+
+        <div class="update-section">
+            <div class="card">
+                <div class="form-header">
+                    <h2>Notification Update</h2>
+                </div>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <!-- Status Field -->
+                    <div class="input-box">
+                        <div class="input-wrapper">
+                            <i class="bx bx-info-circle"></i>
+                            <input type="text" id="status" name="status" class="input-field" placeholder="Enter new status" value="{{notification.status}}" required>
+                        </div>
+                    </div>
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn">Update</button>
+                </form>
+                <div class="quote">"Timely updates in education foster a culture of continuous improvement." – Educational Leader</div>
+                <div class="quote">"Notifications are the bridge between educators and engaged learners." – Learning Advocate</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/jquery.animateNumber.min.js"></script>
+    <script src="js/jquery.waypoints.min.js"></script>
+    <script src="js/jquery.fancybox.min.js"></script>
+    <script src="js/jquery.sticky.js"></script>
+    <script src="js/aos.js"></script>
+    <script src="js/custom.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Mobile menu toggle
+            $('.menu-toggle').click(function() {
+                $('.admin-sidebar').toggleClass('active');
+            });
+
+            // Close sidebar when clicking outside on mobile
+            $(document).click(function(e) {
+                if ($(window).width() <= 991) {
+                    if (!$(e.target).closest('.admin-sidebar').length && !$(e.target).closest('.menu-toggle').length) {
+                        $('.admin-sidebar').removeClass('active');
+                    }
+                }
+            });
+
+            // Handle window resize
+            $(window).resize(function() {
+                if ($(window).width() > 991) {
+                    $('.admin-sidebar').removeClass('active');
+                }
+            });
+
+            // Smooth scroll to top when clicking logo
+            $('.logo').click(function() {
+                $('html, body').animate({scrollTop: 0}, 500);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,689 @@
+<!-- user/chat_bot.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant - EduConnect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #4c3bab;
+            --accent: #ff6b6b;
+            --dark-blue: #1e2a78;
+            --light-blue: #42b7ff;
+            --orange: #ff9f67;
+            --green: #4be0bc;
+            --yellow: #ffce54;
+            --bg-light: #ffffff;
+            --text-dark: #2c3e50;
+            --text-gray: #7f8c8d;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 280px;
+            background: rgba(76, 59, 171, 0.95);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar .logo {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar .logo svg {
+            margin-right: 0.5rem;
+            stroke: var(--light-blue);
+        }
+
+        .sidebar .logo h2 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--light-blue), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 0;
+        }
+
+        .nav-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .nav-item {
+            margin-bottom: 15px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.4s ease;
+        }
+
+        .nav-link i {
+            margin-right: 12px;
+            font-size: 20px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            transform: translateX(5px);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 40px;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Admin Badge */
+        .admin-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--primary);
+            color: white;
+            padding: 8px 15px;
+            font-weight: 600;
+            transform: rotate(45deg) translate(25%, -15%);
+            transform-origin: top right;
+            font-size: 14px;
+            border-bottom-left-radius: 5px;
+            z-index: 100;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--secondary), var(--dark-blue));
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            color: white;
+            box-shadow: var(--box-shadow);
+        }
+
+        .page-header h2 {
+            font-size: 28px;
+            margin-bottom: 5px;
+            color: white;
+            text-align: left;
+        }
+
+        .page-header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        /* Chat Container */
+        .chat-container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 250px);
+        }
+
+        /* Chat Header */
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .chat-header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .assistant-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+
+        .assistant-avatar i {
+            font-size: 20px;
+            color: var(--secondary);
+        }
+
+        .chat-title {
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .clear-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .clear-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .clear-btn i {
+            margin-right: 6px;
+        }
+
+        /* Chat Messages */
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            max-width: 80%;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .user-message {
+            margin-left: auto;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 18px 18px 0 18px;
+            padding: 12px 16px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .bot-message {
+            background-color: white;
+            border-radius: 18px 18px 18px 0;
+            padding: 12px 16px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            color: var(--text-dark);
+        }
+
+        /* Message Input */
+        .chat-input-area {
+            padding: 15px 20px;
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .chat-form {
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            border: 1px solid #e2e8f0;
+            border-radius: 30px;
+            padding: 12px 20px;
+            font-size: 15px;
+            resize: none;
+            max-height: 120px;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .send-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            margin-left: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            margin-left: 12px;
+            padding: 10px 16px;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 2px;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Markdown Styles */
+        .markdown p {
+            margin-bottom: 12px;
+        }
+
+        .markdown ul, .markdown ol {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .markdown h1, .markdown h2, .markdown h3, .markdown h4 {
+            margin-top: 16px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .markdown code {
+            font-family: 'Courier New', monospace;
+            background-color: #f1f1f1;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .markdown pre {
+            background-color: #2d333b;
+            color: #e6edf3;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 12px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Menu Toggle */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            background: var(--secondary);
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .menu-toggle:hover {
+            background: var(--primary);
+            transform: rotate(90deg);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-content {
+                margin-left: 0;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+
+            .page-header {
+                padding: 20px;
+            }
+
+            .chat-container {
+                height: calc(100vh - 200px);
+            }
+
+            .message {
+                max-width: 90%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header h2 {
+                font-size: 22px;
+            }
+
+            .chat-header {
+                padding: 12px 15px;
+            }
+
+            .assistant-avatar {
+                width: 35px;
+                height: 35px;
+            }
+
+            .chat-title {
+                font-size: 16px;
+            }
+
+            .chat-messages {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Panel Badge -->
+    <div class="admin-badge">STUDENT PANEL</div>
+
+    <!-- Menu Toggle Button -->
+    <button class="menu-toggle">
+        <i class="uil uil-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg>
+            <h2>EduConnect</h2>    </div> <nav>
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="/student" class="nav-link active"><i class="uil uil-layout"></i><span>Dashboard</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="/teachers" class="nav-link"><i class="uil uil-users-alt"></i><span>View Teachers</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="/lecture" class="nav-link"><i class="uil uil-book-open"></i><span>View Lecture Note</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="/assignment" class="nav-link"><i class="uil uil-clipboard"></i><span>View Assignment</span></a>
+                </li>
+                <!-- <li class="nav-item">
+                    <a href="#" class="nav-link"><i class="uil uil-pen"></i><span>Attend Assessment</span></a>
+                    <ul class="sub-list">
+                        <li><a href="#" class="nav-link"><i class="uil uil-check-circle"></i><span>View Score</span></a></li>
+                    </ul>
+                </li> -->
+                <li class="nav-item">
+                    <a href="/chat_bot" class="nav-link"><i class="uil uil-message"></i><span>Chatbot</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="/notification" class="nav-link"><i class="uil uil-bell"></i><span>View Notification</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="/student_view_attendance" class="nav-link"><i class="uil uil-calendar-alt"></i><span>View Attendance</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="/pass_request" class="nav-link"><i class="uil uil-ticket"></i><span>Request Pass</span></a>
+                    <ul class="sub-list">
+                        <li><a href="/passreq" class="nav-link"><i class="uil uil-eye"></i><span>View Status</span></a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="/complaint" class="nav-link"><i class="uil uil-comment-alt-lines"></i><span>Give Complaints</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="/login" class="nav-link"><i class="uil uil-sign-out-alt"></i><span>Logout</span></a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="page-header">
+            <h2>AI Assistant</h2>
+            <p>Ask questions and get help with your studies</p>
+        </div>
+
+        <div class="chat-container">
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <div class="chat-header-left">
+                    <div class="assistant-avatar">
+                        <i class="uil uil-robot"></i>
+                    </div>
+                    <div class="chat-title">Gemini AI Assistant</div>
+                </div>
+                <button id="clearChat" class="clear-btn">
+                    <i class="uil uil-trash-alt"></i> Clear Chat
+                </button>
+            </div>
+            
+            <!-- Chat Messages -->
+            <div id="chatMessages" class="chat-messages">
+                <div class="message bot-message markdown">
+                    <p>👋 Hi there! I'm your Gemini AI assistant. How can I help you today?</p>
+                </div>
+            </div>
+            
+            <!-- Chat Input -->
+            <div class="chat-input-area">
+                <form id="chatForm" class="chat-form">
+                    <textarea 
+                        id="userInput" 
+                        class="chat-input"
+                        placeholder="Type your message here..."
+                        rows="1"
+                    ></textarea>
+                    <button type="submit" class="send-btn">
+                        <i class="uil uil-message"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.2/marked.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatMessages = document.getElementById('chatMessages');
+            const chatForm = document.getElementById('chatForm');
+            const userInput = document.getElementById('userInput');
+            const clearChatButton = document.getElementById('clearChat');
+            const menuToggle = document.querySelector('.menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            
+            // For storing chat history
+            let chatHistory = [];
+            
+            // Function to add a message to the chat
+            function addMessage(content, isUser = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = isUser ? 'message user-message' : 'message bot-message markdown';
+                
+                if (isUser) {
+                    messageDiv.textContent = content;
+                } else {
+                    // Parse markdown for bot messages
+                    messageDiv.innerHTML = marked.parse(content);
+                }
+                
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Function to show typing indicator
+            function showTypingIndicator() {
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'message bot-message typing-indicator';
+                typingDiv.id = 'typingIndicator';
+                typingDiv.innerHTML = '<span></span><span></span><span></span>';
+                chatMessages.appendChild(typingDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Function to remove typing indicator
+            function removeTypingIndicator() {
+                const typingIndicator = document.getElementById('typingIndicator');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+            }
+            
+            // Handle form submission
+            chatForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const message = userInput.value.trim();
+                if (!message) return;
+                
+                // Add user message to chat
+                addMessage(message, true);
+                
+                // Clear input
+                userInput.value = '';
+                userInput.style.height = 'auto';
+                
+                // Show typing indicator
+                showTypingIndicator();
+                
+                try {
+                    // Send request to backend
+                    const response = await fetch('/chat_response/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            message: message,
+                            history: chatHistory
+                        }),
+                    });
+                    
+                    const data = await response.json();
+                    
+                    // Remove typing indicator
+                    removeTypingIndicator();
+                    
+                    if (data.error) {
+                        addMessage('Sorry, I encountered an error: ' + data.error);
+                    } else {
+                        // Add bot response to chat
+                        addMessage(data.response);
+                        // Update chat history
+                        chatHistory = data.history;
+                    }
+                } catch (error) {
+                    removeTypingIndicator();
+                    addMessage('Sorry, I encountered an error while processing your request.');
+                    console.error('Error:', error);
+                }
+            });
+            
+            // Auto-resize textarea
+            userInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+            });
+            
+            // Clear chat history
+            clearChatButton.addEventListener('click', function() {
+                chatMessages.innerHTML = '';
+                chatHistory = [];
+                addMessage('👋 Hi there! I\'m your Gemini AI assistant. How can I help you today?', false);
+            });
+            
+            // Allow sending messages with Enter key (but Shift+Enter for new line)
+            userInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    chatForm.dispatchEvent(new Event('submit'));
+                }
+            });
+            
+            // Menu Toggle Functionality
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('active');
+            });
+            
+            // Close sidebar when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!sidebar.contains(e.target) && e.target !== menuToggle) {
+                    sidebar.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
